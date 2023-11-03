@@ -2,8 +2,6 @@ package com.sparta.memo.dto;
 
 import com.sparta.memo.entity.Memo;
 import lombok.Getter;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
 
 @Getter
 public class MemoResponseDto {
@@ -17,4 +15,9 @@ public class MemoResponseDto {
         this.contents = memo.getContents();
     }
 
+    public MemoResponseDto(Long id, String username, String contents) {
+        this.id = id;
+        this.username = username;
+        this.contents = contents;
+    }
 }
