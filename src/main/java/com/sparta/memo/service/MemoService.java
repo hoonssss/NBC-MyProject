@@ -7,10 +7,8 @@ import com.sparta.memo.repository.MemoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
 @Service
 public class MemoService {
-
 
 //    private final JdbcTemplate jdbcTemplate;
 //
@@ -18,14 +16,20 @@ public class MemoService {
 //        this.jdbcTemplate = jdbcTemplate;
 //    }
     private final MemoRepository memoRepository;
-
-//    public MemoService(JdbcTemplate jdbcTemplate){
-//        this.memoRepository = new MemoRepository(jdbcTemplate);
+//    @Autowired
+//    public void setMemoService(MemoRepository memoService){
+//        this.memoRepository = memoService;
 //    }
 
     private MemoService(MemoRepository memoRepository){
         this.memoRepository = memoRepository;
     }
+
+//    public MemoService(JdbcTemplate jdbcTemplate){
+//        this.memoRepository = new MemoRepository(jdbcTemplate);
+//    }
+
+
 
     public MemoResponseDto createMethod(MemoRequestDto requestDto) {
         // RequestDto -> Entity
