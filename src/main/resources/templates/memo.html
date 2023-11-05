@@ -65,10 +65,10 @@
         <h2>Create Memo</h2>
         <form id="createMemoForm">
             <label for="username">Username:</label>
-            <input type="text" id="username" name="title" required><br> <!-- name 속성 수정 -->
+            <input type="text" id="username" name="username" required><br>
 
             <label for="title">Title:</label>
-            <input type="text" id="title" name="username" required><br> <!-- name 속성 수정 -->
+            <input type="text" id="title" name="title" required><br>
 
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required><br>
@@ -96,6 +96,27 @@
             .then(data => displayMemos(data))
             .catch(error => console.error('Error:', error));
     }
+    function deleteMemo(username) {
+        var password = prompt("Enter your password to delete:");
+        if (password !== null) {
+            fetch('/api/delete/' + username, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ password: password }),
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alert("Memo deleted.");
+                        getMemos();
+                    } else {
+                        alert("Error deleting the memo.");
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    }
 
     function displayMemos(memos) {
         var memoList = document.getElementById("memoList");
@@ -108,30 +129,34 @@
             var editButton = document.createElement("button");
             editButton.innerText = "Edit";
             editButton.onclick = function() {
-                var editedTitle = prompt("Edit the title:", memo.title);
-                var editedContents = prompt("Edit the contents:", memo.contents);
+                var password = prompt("Enter your password to edit this memo:", ""); // 비밀번호 입력 추가
+                if (password !== null) {
+                    var editedTitle = prompt("Edit the title:", memo.title);
+                    var editedContents = prompt("Edit the contents:", memo.contents);
 
-                if (editedTitle !== null && editedContents !== null) {
-                    var data = {
-                        title: editedTitle,
-                        username: memo.username,
-                        contents: editedContents,
-                        date: null
-                    };
+                    if (editedTitle !== null && editedContents !== null) {
+                        var data = {
+                            title: editedTitle,
+                            username: memo.username,
+                            contents: editedContents,
+                            password: password, // 수정 작업을 수행할 때 비밀번호도 전송
+                            date: null
+                        };
 
-                    fetch('/api/put/' + memo.username, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(data)
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            alert("Memo updated: " + data.title);
-                            getMemos();
+                        fetch('/api/put/' + memo.username, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(data)
                         })
-                        .catch(error => console.error('Error:', error));
+                            .then(response => response.json())
+                            .then(data => {
+                                alert("Memo updated: " + data.title);
+                                getMemos();
+                            })
+                            .catch(error => console.error('Error:', error));
+                    }
                 }
             };
 
@@ -139,15 +164,11 @@
             deleteButton.innerText = "Delete";
             deleteButton.onclick = function() {
                 if (confirm("Are you sure you want to delete this memo?")) {
-                    var password = prompt("Enter your password to delete:", memo.password);
+                    var password = prompt("Enter your password to delete:", "");
 
                     if (password !== null) {
-                        fetch('/api/delete/' + memo.username, {
-                            method: 'DELETE',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(password)
+                        fetch('/api/delete/' + memo.username + '?password=' + password, {
+                            method: 'DELETE'
                         })
                             .then(response => {
                                 if (response.ok) {
@@ -168,18 +189,18 @@
         });
     }
 
-
     // Initially load memos when the page loads
     getMemos();
+
     function createMemo() {
-        var title = document.getElementById("title").value; // "title" 필드에서 제목을 가져오도록 수정
-        var username = document.getElementById("username").value; // "username" 필드에서 사용자 이름을 가져오도록 수정
+        var title = document.getElementById("title").value;
+        var username = document.getElementById("username").value;
         var password = document.getElementById("password").value;
         var contents = document.getElementById("contents").value;
 
         var data = {
             username: username,
-            title: title, // "title"과 "username" 위치를 바꿔서 제목과 사용자 이름이 올바르게 전송되도록 수정
+            title: title,
             password: password,
             contents: contents,
             date: null
@@ -199,7 +220,6 @@
             })
             .catch(error => console.error('Error:', error));
     }
-
 </script>
 </body>
 </html>

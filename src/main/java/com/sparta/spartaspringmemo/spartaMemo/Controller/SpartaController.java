@@ -39,7 +39,7 @@ public class SpartaController {
     }
 
     @DeleteMapping("/delete/{username}")
-    public String deleteMemo(@PathVariable String username, @RequestBody MemoRequestDto memoRequestDto) {
-        return memoService.deleteMemo(username,memoRequestDto);
+    public String deleteMemo(@PathVariable String username, @RequestParam String password) {
+        return memoService.deleteMemo(username, password);
     }
 }

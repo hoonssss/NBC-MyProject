@@ -1,5 +1,6 @@
 package com.sparta.spartaspringmemo.spartaMemo.Service;
 
+import com.sparta.spartaspringmemo.Repository.MemoRepository;
 import com.sparta.spartaspringmemo.spartaMemo.Memo;
 import com.sparta.spartaspringmemo.spartaMemo.MemoRequestDto;
 import com.sparta.spartaspringmemo.spartaMemo.MemoResponseDto;
@@ -14,11 +15,15 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class MemoService {
 
+    MemoRepository memoRepository;
+    public MemoService(MemoRepository memoRepository){
+        this.memoRepository = memoRepository;
+    }
     private Map<String, Memo> memoMap = new ConcurrentHashMap<>();
 
     public MemoResponseDto createMemo(MemoRequestDto requestDto) {
         Memo memo = new Memo(requestDto.getUsername(), requestDto.getTitle(), requestDto.getPassword(), requestDto.getContents(), LocalDateTime.now());
-        memoMap.put(requestDto.getUsername(), memo);
+        memoMap.put(memo.getUsername(), memo);
         MemoResponseDto memoResponseDto = new MemoResponseDto(memo);
         return memoResponseDto;
     }
@@ -57,10 +62,10 @@ public class MemoService {
         }
     }
 
-    public String deleteMemo(String username, MemoRequestDto memoRequestDto) {
+    public String deleteMemo(String username, String password) {
         Memo memo = memoMap.get(username);
-        if (memo != null && memo.getUsername().equals(username) && memo.getPassword().equals(memoRequestDto.getPassword())) {
-            memoMap.remove(username);
+        if (memo != null && memo.getPassword().equals(password)) {
+            memoMap.remove(password);
             return "삭제 완료";
         } else {
             throw new IllegalArgumentException("/delete/{username}");
