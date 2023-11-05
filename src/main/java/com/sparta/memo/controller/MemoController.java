@@ -12,37 +12,42 @@ import java.util.List;
 @RequestMapping("/api")
 public class MemoController {
 
-    private final JdbcTemplate jdbcTemplate;
+//    private final JdbcTemplate jdbcTemplate;
+//
+//    public MemoController(JdbcTemplate jdbcTemplate) {
+//        this.jdbcTemplate = jdbcTemplate;
+//    }
 
-    public MemoController(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    private final MemoService memoService;
+
+    public MemoController(JdbcTemplate jdbcTemplate){
+        this.memoService = new MemoService(jdbcTemplate);
     }
 
     @PostMapping("/memos")
     public MemoResponseDto createMemo(@RequestBody MemoRequestDto requestDto) {
-        MemoService memoService = new MemoService(jdbcTemplate);
+//        MemoService memoService = new MemoService(jdbcTemplate);
         return memoService.createMethod(requestDto);
 
     }
 
     @GetMapping("/memos")
     public List<MemoResponseDto> getMemos() {
-        MemoService memoService = new MemoService(jdbcTemplate);
+//        MemoService memoService = new MemoService(jdbcTemplate);
         return memoService.getMethod();
     }
 
     @PutMapping("/memos/{id}")
     public Long updateMemo(@PathVariable Long id, @RequestBody MemoRequestDto requestDto) {
         // 해당 메모가 DB에 존재하는지 확인
-        MemoService memoService = new MemoService(jdbcTemplate);
+//        MemoService memoService = new MemoService(jdbcTemplate);
         return memoService.putMethod(id, requestDto);
 
     }
 
     @DeleteMapping("/memos/{id}")
     public Long deleteMemo(@PathVariable Long id) {
-        MemoService memoService = new MemoService(jdbcTemplate);
+//        MemoService memoService = new MemoService(jdbcTemplate);
         return memoService.deleteMethod(id);
     }
-
 }
