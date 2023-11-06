@@ -30,7 +30,9 @@ public class MemoService {
 
     public List<MemoResponseDto> getMemo() {
         List<MemoResponseDto> responseDtos = new ArrayList<>();
-        for (Memo memo : memoMap.values()) {
+        List<Memo> memos = new ArrayList<>(memoMap.values());
+        Collections.sort(memos, Comparator.comparing(Memo::getDate).reversed());
+        for (Memo memo : memos) {
             responseDtos.add(new MemoResponseDto(memo.getTitle(), memo.getUsername(), memo.getContents(), memo.getDate()));
         }
         return responseDtos;
