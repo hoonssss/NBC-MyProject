@@ -62,10 +62,10 @@ public class MemoService {
         }
     }
 
-    public String deleteMemo(String username, String password) {
+    public String deleteMemo(String username, MemoRequestDto requestDto) {
         Memo memo = memoMap.get(username);
-        if (memo != null && memo.getPassword().equals(password)) {
-            memoMap.remove(password);
+        if (memo != null && memo.getPassword().equals(requestDto.getPassword())) {
+            memoMap.remove(username, memo);
             return "삭제 완료";
         } else {
             throw new IllegalArgumentException("/delete/{username}");
