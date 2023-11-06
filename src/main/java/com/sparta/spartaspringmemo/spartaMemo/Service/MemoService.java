@@ -44,13 +44,12 @@ public class MemoService {
 
     public MemoResponseDto getsMemo(String username) {
         Memo memo = memoMap.get(username);
-        if (memo != null && memo.getUsername().equals(memoMap.get(username))) {
+        if (memo != null) {
             return new MemoResponseDto(memo.getTitle(), memo.getUsername(), memo.getContents(), memo.getDate());
         } else {
             throw new IllegalArgumentException("/get/{username}");
         }
     }
-
 
     public MemoResponseDto putMemo(String username, MemoRequestDto memoRequestDto) {
         Memo memo = memoMap.get(username);
