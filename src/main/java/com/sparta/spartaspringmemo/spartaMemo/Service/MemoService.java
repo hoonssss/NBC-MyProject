@@ -61,9 +61,9 @@ public class MemoService {
         }
     }
 
-    public String deleteMemo(String username, MemoRequestDto requestDto) {
+    public String deleteMemo(String username, String password) {
         Memo memo = memoMap.get(username);
-        if (memo != null && memo.getPassword().equals(requestDto.getPassword())) {
+        if (memo != null && memo.getPassword().equals(password)) {
             memoMap.remove(username, memo);
             return "삭제 완료";
         } else {
