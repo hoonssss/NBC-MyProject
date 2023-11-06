@@ -36,11 +36,12 @@ public class MemoService {
             responseDtos.add(new MemoResponseDto(memo.getTitle(), memo.getUsername(), memo.getContents(), memo.getDate()));
         }
         return responseDtos;
-//        List<MemoResponseDto> memoResponseDtoList = memoMap.values()
+//        List<MemoResponseDto> responseDtos = memoMap.values()
 //                .stream()
-//                .map(MemoResponseDto::new)
-//                .toList();
-//        return memoResponseDtoList;
+//                .sorted(Comparator.comparing(Memo::getDate).reversed())
+//                .map(memo -> new MemoResponseDto(memo.getTitle(), memo.getUsername(), memo.getContents(), memo.getDateTime()))
+//                .collect(Collectors.toList());
+//                return responseDtos;
 
     }
 
