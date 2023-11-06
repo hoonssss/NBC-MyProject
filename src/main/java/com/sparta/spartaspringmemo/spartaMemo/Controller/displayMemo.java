@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class displayMemo {
 
-    @RequestMapping("/")
+    @GetMapping("/")
     public String display(){
         return "memo";
     }
