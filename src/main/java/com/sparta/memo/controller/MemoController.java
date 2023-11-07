@@ -41,9 +41,9 @@ public class MemoController {
         return memoService.getMethod();
     }
 
-    @GetMapping("/memos/contents")
-    public List<MemoResponseDto> getMemosByKeyword(String keyword){
-        return memoService.getMemoByKeyWord(keyword);
+    @GetMapping("memos/contents")
+    public List<MemoResponseDto> getKeyword(String keyword){
+        return memoService.getKeyWord(keyword);
     }
 
     @PutMapping("/memos/{id}")
