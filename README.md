@@ -10,3 +10,6 @@ ErerorController -> error.html 보여줌 <br/>
 displayMemo -> memo.html 보여줌 <br/>
 error.html -> templates을 통해 예외 접근 시 error 웹 표시 https://chb2005.tistory.com/96 참고, 강의 참고하였음 <br/>
 memo.html -> gpt를 통하여 기본적인 front틀 구현, 제공함으로써 편의 제공  <br/>
+![image](https://github.com/hoonssss/NBCproject/assets/124040137/250e743a-0a3a-4427-9a59-2d40cb4ab173)
+![image](https://github.com/hoonssss/NBCproject/assets/124040137/cada0e4c-d315-451b-9d36-3447d3e53e3e)
+
