@@ -48,11 +48,15 @@ public class MemoService {
 
     public List<MemoResponseDto> getMethod() {
 //        MemoRepository memoRepository = new MemoRepository(jdbcTemplate);
-        return memoRepository.findAll()
+        return memoRepository.findAllByOrderByModifiedAtDesc()
                 .stream()
                 .map(MemoResponseDto::new)
-                .toList(); //stream에서 memo가 하나씩 빠져나가고 mpa에 의해서 변환이 될건데 MemoResponseDto에 생성자 중에
-                            // memo를 파라미터로 가지고 있는 생성자가 호출이 되고 그게 하나씩 변환이 되면서 그 값들을 List로 바꿔준다
+                .toList();
+//        return memoRepository.findAll()
+//                .stream()
+//                .map(MemoResponseDto::new)
+//                .toList(); //stream에서 memo가 하나씩 빠져나가고 mpa에 의해서 변환이 될건데 MemoResponseDto에 생성자 중에
+//                            // memo를 파라미터로 가지고 있는 생성자가 호출이 되고 그게 하나씩 변환이 되면서 그 값들을 List로 바꿔준다
     }
 
     @Transactional //변경감지를 위해 달아줘야함
