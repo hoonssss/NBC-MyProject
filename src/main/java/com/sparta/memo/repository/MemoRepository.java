@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface MemoRepository extends JpaRepository<Memo, Long> { //Entity -> Memo
     List<Memo> findAllByOrderByModifiedAtDesc();
-    List<Memo> findAllByUsername();
+    List<Memo> findAllByContentsContainsOrderByModifiedAtDesc(String keyword);
 }
 // JDBC
 //

@@ -59,6 +59,13 @@ public class MemoService {
 //                            // memo를 파라미터로 가지고 있는 생성자가 호출이 되고 그게 하나씩 변환이 되면서 그 값들을 List로 바꿔준다
     }
 
+    public List<MemoResponseDto> getMemoByKeyWord(String keyword) {
+        return memoRepository.findAllByContentsContainsOrderByModifiedAtDesc(keyword)
+                .stream()
+                .map(MemoResponseDto::new)
+                .toList();
+    }
+
     @Transactional //변경감지를 위해 달아줘야함
     public Long putMethod(Long id, MemoRequestDto requestDto) {
 //        MemoRepository memoRepository = new MemoRepository(jdbcTemplate);
@@ -92,4 +99,6 @@ public class MemoService {
                 () -> new IllegalArgumentException("메모가없음") //null값일때
         );
     }
+
+
 }
