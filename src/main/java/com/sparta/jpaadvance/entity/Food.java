@@ -18,7 +18,9 @@ public class Food {
     private String name;
     private double price;
 
-    @OneToMany
-    @JoinColumn(name = "food_id")
+    @ManyToMany
+    @JoinTable(name = "orders", //중간테이블 생성
+            joinColumns = @JoinColumn(name = "food_id"), //현재 위치에서 중간 테이블 조인
+            inverseJoinColumns = @JoinColumn(name = "user_id")) //반대 위치에서 중간 테이블 조인
     private List<User> userList = new ArrayList<>();
 }
