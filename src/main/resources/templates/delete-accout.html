@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>계정 삭제</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f4;
+      text-align: center;
+      margin: 50px;
+    }
+    h2 {
+      color: #333;
+    }
+    form {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 300px;
+      margin: auto;
+    }
+    label {
+      display: block;
+      margin-bottom: 10px;
+      color: #333;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    input[type="submit"] {
+      background-color: #4caf50;
+      color: #fff;
+      cursor: pointer;
+    }
+    input[type="submit"]:hover {
+      background-color: #45a049;
+    }
+    a {
+      color: #333;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+<h2>계정 삭제</h2>
+
+<form action="/api/user/delete-account" method="post">
+  <label for="username">ID</label>
+  <input type="text" id="username" name="username" required>
+  <br>
+  <label for="password">비밀번호</label>
+  <input type="password" id="password" name="password" required>
+  <br>
+  <input type="submit" value="계정 삭제">
+</form>
+
+<br>
+<p><a href="/api/user/delete-account">계정 삭제</a></p>
+</body>
+</html>
