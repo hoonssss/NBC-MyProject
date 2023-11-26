@@ -1,6 +1,6 @@
 package com.example.backendgram.profile.service;
 
-import com.example.backendgram.profile.dto.ProfileRequestDto;
+import com.example.backendgram.profile.dto.ProfileResponseDto;
 import com.example.backendgram.profile.entity.Profile;
 import com.example.backendgram.profile.repository.ProfileRepository;
 import com.example.backendgram.user.entity.User;
@@ -25,74 +25,50 @@ public class ProfileService {
     private final ProfileRepository profileRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public ProfileRequestDto getProfileByUserId(Long userId) {
+    private final String profileImageDirectory = "your/profile/image/directory";
+
+    public ProfileResponseDto getProfileByUserId(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("유저 오류"));
 
         Profile profile = user.getProfile();
         if (profile == null) {
-            return new ProfileRequestDto();
+            return new ProfileResponseDto();
         }
 
-        ProfileRequestDto profileRequestDto = new ProfileRequestDto();
-        profileRequestDto.setIntroduction(profile.getIntroduction());
+        // 이미지 URL 생성
+        String profileImageURL = profile.getProfileImage() != null ?
+                ProfileResponseDto.createWithImageURL(user.getId(), profile.getIntroduction(), profile.getProfileImage()).getProfileImageURL() :
+                null;
 
-        return profileRequestDto;
+        return new ProfileResponseDto(user.getId(), profile.getIntroduction(), profileImageURL);
     }
 
-    public ProfileRequestDto updateProfile(Long userId, ProfileRequestDto updatedProfile) {
+    public void createProfile(Long userId, String introduction) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("유저 오류"));
 
-        Profile profile = user.getProfile();
-        if (profile == null) {
-            profile = new Profile();
-            profile.setUser(user);
-            user.setProfile(profile);
-        }
-
-        profile.setIntroduction(updatedProfile.getIntroduction());
+        Profile profile = getProfile(user);
+        profile.setIntroduction(introduction);
 
         userRepository.save(user);
-
-        return updatedProfile;
     }
 
     public void updatePassword(Long userId, String newPassword) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("유저 오류"));
 
         user.setPassword(passwordEncoder.encode(newPassword));
 
         userRepository.save(user);
     }
 
-    public void updateIntroduction(Long userId, String introduction) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
-        Profile profile = user.getProfile();
-        if (profile == null) {
-            profile = new Profile();
-            profile.setUser(user);
-            user.setProfile(profile);
-        }
-
-        profile.setIntroduction(introduction);
-
-        userRepository.save(user);
-    }
 
     public void updateProfileImage(Long userId, MultipartFile profileImage) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("유저 오류"));
 
-        Profile profile = user.getProfile();
-        if (profile == null) {
-            profile = new Profile();
-            profile.setUser(user);
-            user.setProfile(profile);
-        }
+        Profile profile = getProfile(user);
 
         String imageName = saveProfileImage(profileImage);
         profile.setProfileImage(imageName);
@@ -103,11 +79,21 @@ public class ProfileService {
     private String saveProfileImage(MultipartFile profileImage) {
         String imageName = UUID.randomUUID().toString() + "_" + profileImage.getOriginalFilename();
         try {
-            Files.copy(profileImage.getInputStream(), Paths.get("your/profile/image/directory", imageName),
+            Files.copy(profileImage.getInputStream(), Paths.get(profileImageDirectory, imageName),
                     StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to save profile image", e);
+            throw new RuntimeException("프로필 이미지 저장 실패", e);
         }
         return imageName;
+    }
+
+    private static Profile getProfile(User user) {
+        Profile profile = user.getProfile();
+        if (profile == null) {
+            profile = new Profile();
+            profile.setUser(user);
+            user.setProfile(profile);
+        }
+        return profile;
     }
 }
