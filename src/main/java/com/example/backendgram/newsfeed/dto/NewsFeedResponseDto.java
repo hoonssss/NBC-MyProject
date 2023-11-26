@@ -4,12 +4,14 @@ import com.example.backendgram.CommonResponseDto;
 import com.example.backendgram.newsfeed.Entity.NewsFeed;
 import com.example.backendgram.user.entity.User;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class NewsFeedResponseDto extends CommonResponseDto {
 
     private Long id;
@@ -17,6 +19,7 @@ public class NewsFeedResponseDto extends CommonResponseDto {
     private String content;
     private User user;
     private LocalDateTime creatDate;
+    private int likeCount;
 
     public NewsFeedResponseDto(NewsFeed newsFeed) {
         this.id = newsFeed.getId();

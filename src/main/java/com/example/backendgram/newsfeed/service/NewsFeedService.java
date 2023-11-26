@@ -4,12 +4,14 @@ import com.example.backendgram.newsfeed.Entity.NewsFeed;
 import com.example.backendgram.newsfeed.dto.NewsFeedRequestDto;
 import com.example.backendgram.newsfeed.dto.NewsFeedResponseDto;
 import com.example.backendgram.newsfeed.repository.NewsFeedRepository;
+import com.example.backendgram.security.UserDetailsImpl;
 import com.example.backendgram.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,12 +35,10 @@ public class NewsFeedService {
 
     //JH
     public List<NewsFeedResponseDto> getAllNewsFeed() {
-        List<NewsFeed> newsfeed = newsFeedRepository.findAll();
-
-        return newsfeed.stream()
-                .map(
-                        NewsFeedResponseDto::new
-                ).collect(Collectors.toList());
+        List<NewsFeed> newsFeeds = newsFeedRepository.findAll();
+        return newsFeeds.stream().map(
+                NewsFeedResponseDto::new
+        ).collect(Collectors.toList());
     }
 
     public NewsFeedResponseDto getNewsFeed(Long id) {
@@ -61,6 +61,33 @@ public class NewsFeedService {
         newsFeedRepository.delete(newsFeed);
 
         return new NewsFeedResponseDto(newsFeed);
+    }
+
+    public NewsFeedResponseDto likeFeed(Long id, User user) {
+        NewsFeed newsFeed = getFeed(id);
+
+        newsFeed.getLikes().add(user);
+        newsFeedRepository.save(newsFeed);
+        return convertToDto(newsFeed);
+    }
+
+    public NewsFeedResponseDto unlikeFeed(Long id, User user) {
+        NewsFeed newsFeed = getFeed(id);
+
+        newsFeed.getLikes().remove(user);
+        newsFeedRepository.save(newsFeed);
+
+        return convertToDto(newsFeed);
+    }
+
+    public NewsFeedResponseDto convertToDto(NewsFeed newsFeed){
+        NewsFeedResponseDto responseDTO = new NewsFeedResponseDto();
+
+        newsFeed.setId(newsFeed.getId());
+        newsFeed.setContent(newsFeed.getContent());
+
+        responseDTO.setLikeCount(newsFeed.getLikes().size());
+        return responseDTO;
     }
 
     public NewsFeed getFeed(Long id) {

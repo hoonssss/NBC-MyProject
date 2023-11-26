@@ -72,8 +72,7 @@ public class UserService {
 
     public String login(String username, String password) {
         try {
-            User user = userRepository.findByUsernameAndPassword(username,password)
-                    .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+            User user = getUser(username, password);
 
             if (passwordEncoder.matches(password, user.getPassword())) {
                 // 비밀번호가 일치하면 JWT 토큰을 생성하여 반환
@@ -92,9 +91,7 @@ public class UserService {
     @Transactional
     public void deleteAccount(String username, String password) {
         try {
-            User user = userRepository.findByUsernameAndPassword(username, password).orElseThrow(
-                    () -> new UsernameNotFoundException("사용자를 찾을 수 없습니다.")
-            );
+            User user = getUser(username, password);
 
             userRepository.delete(user);
 
@@ -111,6 +108,13 @@ public class UserService {
         } catch (Exception e) {
             throw new RuntimeException("로그아웃 실패.", e);
         }
+    }
+
+    private User getUser(String username, String password) {
+        User user = userRepository.findByUsernameAndPassword(username, password).orElseThrow(
+                () -> new UsernameNotFoundException("사용자를 찾을 수 없습니다.")
+        );
+        return user;
     }
 
 }

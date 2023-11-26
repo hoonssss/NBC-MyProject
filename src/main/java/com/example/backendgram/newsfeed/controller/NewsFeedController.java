@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -65,6 +66,18 @@ public class NewsFeedController {
         }catch (IllegalArgumentException e){
             return ResponseEntity.badRequest().body(new CommonResponseDto(e.getMessage(),HttpStatus.BAD_REQUEST.value()));
         }
+    }
+
+    @PostMapping("{id}/like")
+    public ResponseEntity<NewsFeedResponseDto> likeFeed(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        NewsFeedResponseDto newsFeedResponseDto = newsFeedService.likeFeed(id,userDetails.getUser());
+        return ResponseEntity.ok().body(newsFeedResponseDto);
+    }
+
+    @PostMapping("{id}/unlike")
+    public ResponseEntity<NewsFeedResponseDto> unlikeFeed(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        NewsFeedResponseDto newsFeedResponseDto = newsFeedService.unlikeFeed(id,userDetails.getUser());
+        return ResponseEntity.ok().body(newsFeedResponseDto);
     }
 
 

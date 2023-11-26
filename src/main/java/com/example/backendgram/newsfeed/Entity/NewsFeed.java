@@ -6,12 +6,15 @@ import com.example.backendgram.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 public class NewsFeed {
 
@@ -35,6 +38,9 @@ public class NewsFeed {
     @OneToMany(mappedBy = "newsFeed")
     private List<Comment> commentList;
 
+    @ManyToMany
+    private List<User> likes = new ArrayList<>();
+
     public NewsFeed(NewsFeedRequestDto newsFeedRequestDto) {
         this.title = newsFeedRequestDto.getTitle();
         this.content = newsFeedRequestDto.getContent();
@@ -52,4 +58,5 @@ public class NewsFeed {
     public void setContent(String content) {
         this.content = content;
     }
+
 }
