@@ -1,5 +1,6 @@
 package com.example.backendgram.jwt;
 
+import com.example.backendgram.security.UserDetailsImpl;
 import com.example.backendgram.user.entity.UserRoleEnum;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -80,5 +81,13 @@ public class JwtUtil {
     // 토큰에서 사용자 정보 가져오기
     public Claims getUserInfoFromToken(String token) {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+    }
+
+    //username, role 확인 후 createToken 생성
+    public String generateToken(UserDetailsImpl userDetails) {
+        String username = userDetails.getUsername();
+        UserRoleEnum role = userDetails.getUser().getRole();
+
+        return createToken(username, role);
     }
 }

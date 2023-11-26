@@ -1,26 +1,21 @@
 package com.example.backendgram.newsfeed.controller;
 
 import com.example.backendgram.CommonResponseDto;
-import com.example.backendgram.newsfeed.dto.NewsFeedListDto;
 import com.example.backendgram.newsfeed.dto.NewsFeedRequestDto;
 import com.example.backendgram.newsfeed.dto.NewsFeedResponseDto;
 import com.example.backendgram.newsfeed.service.NewsFeedService;
 import com.example.backendgram.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
-public class NewsFeerController {
+public class NewsFeedController {
 
     private final NewsFeedService newsFeedService;
 

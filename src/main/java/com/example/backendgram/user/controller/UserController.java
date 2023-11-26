@@ -1,17 +1,25 @@
 package com.example.backendgram.user.controller;
 
 
-
+import com.example.backendgram.CommonResponseDto;
+import com.example.backendgram.jwt.JwtUtil;
+import com.example.backendgram.security.UserDetailsImpl;
 import com.example.backendgram.user.dto.SignupRequestDto;
 import com.example.backendgram.user.dto.UserInfoDto;
 import com.example.backendgram.user.entity.UserRoleEnum;
-import com.example.backendgram.security.UserDetailsImpl;
 import com.example.backendgram.user.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -26,6 +34,7 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final JwtUtil jwtUtil;
 
     @GetMapping("/user/login-page")
     public String loginPage() {
@@ -39,7 +48,7 @@ public class UserController {
 
     @GetMapping("/user/delete-account")
     public String deleteAccountPage() {
-        return "delete-accout";
+        return "delete-account";
     }
 
     @PostMapping("/user/signup")
@@ -57,6 +66,16 @@ public class UserController {
         return "redirect:/api/user/login-page";
     }
 
+    @PostMapping("user/login")
+    public ResponseEntity<CommonResponseDto> login(@RequestParam String username, @RequestParam String password) {
+        try {
+            userService.login(username, password);
+            return ResponseEntity.ok().body(new CommonResponseDto("로그인 성공", HttpStatus.OK.value()));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(new CommonResponseDto("로그인 실패", HttpStatus.BAD_REQUEST.value()));
+        }
+    }
+
     // 회원 관련 정보 받기
     @GetMapping("/user-info")
     @ResponseBody
@@ -72,13 +91,24 @@ public class UserController {
         }
     }
 
+    @PostMapping("/user/logout")
+    public String logout(HttpServletRequest request, HttpServletResponse response){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        try {
+            new SecurityContextLogoutHandler().logout(request,response,auth);
+        }catch (Exception e){
+            log.error("Logout failed.", e);
+            throw new RuntimeException("로그아웃 실패.", e);
+        }
+        return "redirect:/api/user/login-page";
+    }
 
     @PostMapping("/user/delete-account")
-    public String signOut(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestParam String password) {
+    public String deleteAccount(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestParam String password) {
         try {
             if (userDetails != null && userDetails.getUser() != null) {
                 String username = userDetails.getUser().getUsername();
-                userService.signOut(username, password);
+                userService.deleteAccount(username, password);
                 return "redirect:/api/user/login-page";
             } else {
                 return "redirect:/error";

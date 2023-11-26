@@ -29,11 +29,6 @@ public class NewsFeedService {
         return new NewsFeedResponseDto(newsFeed);
     }
 
-    public NewsFeedResponseDto getNewsFeed(Long id) {
-        NewsFeed newsFeed = getFeed(id);
-        return new NewsFeedResponseDto(newsFeed);
-    }
-
     public Page<NewsFeedResponseDto> getNewsFeeds(int page, int size, String sortBy, boolean isAsc) {
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
         Sort sort = Sort.by(direction,sortBy);
@@ -44,6 +39,10 @@ public class NewsFeedService {
         return newsFeeds.map(NewsFeedResponseDto::new);
     }
 
+    public NewsFeedResponseDto getNewsFeed(Long id) {
+        NewsFeed newsFeed = getFeed(id);
+        return new NewsFeedResponseDto(newsFeed);
+    }
 
     public NewsFeedResponseDto patchNewsFeed(Long id, NewsFeedRequestDto requestDto, User user) {
         NewsFeed newsFeed = getUser(id,user);
@@ -62,13 +61,13 @@ public class NewsFeedService {
         return new NewsFeedResponseDto(newsFeed);
     }
 
-    private NewsFeed getFeed(Long id) {
+    public NewsFeed getFeed(Long id) {
         return newsFeedRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않습니다.")
         );
     }
 
-    private NewsFeed getUser(Long id, User user){
+    public NewsFeed getUser(Long id, User user){
         NewsFeed newsFeed = getFeed(id);
 
         if(!user.getId().equals(id)){

@@ -1,5 +1,6 @@
 package com.example.backendgram;
 
+import com.example.backendgram.comment.dto.CommentResponseDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,4 +15,6 @@ import lombok.Setter;
 public class CommonResponseDto {
 	private String msg;
 	private Integer statusCode;
+
+
 }

@@ -1,5 +1,6 @@
 package com.example.backendgram.newsfeed.Entity;
 
+import com.example.backendgram.comment.entity.Comment;
 import com.example.backendgram.newsfeed.dto.NewsFeedRequestDto;
 import com.example.backendgram.user.entity.User;
 import jakarta.persistence.*;
@@ -7,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -29,6 +31,9 @@ public class NewsFeed {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(mappedBy = "newsFeed")
+    private List<Comment> commentList;
 
     public NewsFeed(NewsFeedRequestDto newsFeedRequestDto) {
         this.title = newsFeedRequestDto.getTitle();
