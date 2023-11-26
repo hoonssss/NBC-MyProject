@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -36,13 +38,13 @@ public class NewsFeedController {
     }
 
     @GetMapping("user/gets")
-    public ResponseEntity<Page<NewsFeedResponseDto>> getNewsFeeds(
-            @RequestParam("page") int page,
-            @RequestParam("size") int size,
-            @RequestParam("sortBy") String sortBy,
-            @RequestParam("isAsc") boolean isAsc) {
-        Page<NewsFeedResponseDto> newsfeed = newsFeedService.getNewsFeeds(page - 1, size, sortBy, isAsc);
-        return ResponseEntity.ok().body(newsfeed);
+    public ResponseEntity<List<NewsFeedResponseDto>> getAllNewsFeeds(){
+        try {
+            List<NewsFeedResponseDto> responseDTO = newsFeedService.getAllNewsFeed();
+            return ResponseEntity.ok().body(responseDTO);
+        }catch (IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @PatchMapping("user/{id}")

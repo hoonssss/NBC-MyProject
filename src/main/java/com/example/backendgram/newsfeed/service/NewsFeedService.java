@@ -12,7 +12,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.concurrent.RejectedExecutionException;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,14 +31,14 @@ public class NewsFeedService {
         return new NewsFeedResponseDto(newsFeed);
     }
 
-    public Page<NewsFeedResponseDto> getNewsFeeds(int page, int size, String sortBy, boolean isAsc) {
-        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Sort sort = Sort.by(direction,sortBy);
-        Pageable pageable = PageRequest.of(page,size,sort);
+    //JH
+    public List<NewsFeedResponseDto> getAllNewsFeed() {
+        List<NewsFeed> newsfeed = newsFeedRepository.findAll();
 
-        Page<NewsFeed> newsFeeds = newsFeedRepository.findAll(pageable);
-
-        return newsFeeds.map(NewsFeedResponseDto::new);
+        return newsfeed.stream()
+                .map(
+                        NewsFeedResponseDto::new
+                ).collect(Collectors.toList());
     }
 
     public NewsFeedResponseDto getNewsFeed(Long id) {
