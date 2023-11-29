@@ -6,6 +6,7 @@ import com.example.backendgram.newsfeed.dto.NewsFeedResponseDto;
 import com.example.backendgram.newsfeed.repository.NewsFeedRepository;
 import com.example.backendgram.security.UserDetailsImpl;
 import com.example.backendgram.user.entity.User;
+import com.example.backendgram.user.entity.UserRoleEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -36,11 +37,27 @@ public class NewsFeedService {
         return new NewsFeedResponseDto(newsFeed);
     }
 
-    public List<NewsFeedResponseDto> getAllNewsFeed() {
-        List<NewsFeed> newsFeeds = newsFeedRepository.findAll();
-        return newsFeeds.stream().map(
-                NewsFeedResponseDto::new
-        ).collect(Collectors.toList());
+//    public List<NewsFeedResponseDto> getAllNewsFeed() {
+//        List<NewsFeed> newsFeeds = newsFeedRepository.findAll();
+//        return newsFeeds.stream().map(
+//                NewsFeedResponseDto::new
+//        ).collect(Collectors.toList());
+//    }
+
+    @Transactional(readOnly = true)
+    public Page<NewsFeedResponseDto> getAllNewsFeeds(User user, int page, int size, String sortBy, boolean isAsc) {
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction,sortBy);
+        Pageable pageable = PageRequest.of(page,size,sort);
+
+        UserRoleEnum userRoleEnum = user.getRole();
+
+        Page<NewsFeed> newsFeeds;
+
+        newsFeeds = newsFeedRepository.findAll(pageable);
+
+        return newsFeeds.map(NewsFeedResponseDto::new);
+
     }
 
     public NewsFeedResponseDto getNewsFeed(Long id) {
@@ -113,6 +130,5 @@ public class NewsFeedService {
         }
         return newsFeed;
     }
-
 
 }

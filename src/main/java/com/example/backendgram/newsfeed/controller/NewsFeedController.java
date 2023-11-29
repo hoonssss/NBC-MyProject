@@ -5,6 +5,7 @@ import com.example.backendgram.newsfeed.dto.NewsFeedRequestDto;
 import com.example.backendgram.newsfeed.dto.NewsFeedResponseDto;
 import com.example.backendgram.newsfeed.service.NewsFeedService;
 import com.example.backendgram.security.UserDetailsImpl;
+import com.example.backendgram.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -28,15 +29,26 @@ public class NewsFeedController {
         return ResponseEntity.status(201).body(newsFeedResponseDto);
     }
 
+//    @GetMapping("user/gets")
+//    public ResponseEntity<List<NewsFeedResponseDto>> getAllNewsFeeds() {
+//        try {
+//            List<NewsFeedResponseDto> responseDTO = newsFeedService.getAllNewsFeed();
+//            return ResponseEntity.ok().body(responseDTO);
+//        } catch (IllegalArgumentException e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+//        }
+//    }
+
     @GetMapping("user/gets")
-    public ResponseEntity<List<NewsFeedResponseDto>> getAllNewsFeeds(){
-        try {
-            List<NewsFeedResponseDto> responseDTO = newsFeedService.getAllNewsFeed();
-            return ResponseEntity.ok().body(responseDTO);
-        }catch (IllegalArgumentException e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+    public Page<NewsFeedResponseDto> getAllNewsFeeds(
+            @RequestParam("page") int page,
+            @RequestParam("size") int size,
+            @RequestParam("sortBy") String sortBy,
+            @RequestParam("isAsc") boolean isAsc,
+            @AuthenticationPrincipal UserDetailsImpl user) {
+        return newsFeedService.getAllNewsFeeds(user.getUser(),page-1,size,sortBy,isAsc);
     }
+
 
     @GetMapping("user/{id}")
     public ResponseEntity<CommonResponseDto> getNewsFeed(@PathVariable Long id) {
