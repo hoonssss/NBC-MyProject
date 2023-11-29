@@ -1,22 +1,14 @@
 package com.example.backendgram.user.service;
 
 import com.example.backendgram.jwt.JwtUtil;
-import com.example.backendgram.security.UserDetailsImpl;
 import com.example.backendgram.user.dto.SignupRequestDto;
 import com.example.backendgram.user.entity.User;
 import com.example.backendgram.user.entity.UserRoleEnum;
 import com.example.backendgram.user.repository.UserRepository;
 
-import io.jsonwebtoken.Jwt;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;

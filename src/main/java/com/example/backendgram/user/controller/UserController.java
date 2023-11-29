@@ -4,7 +4,7 @@ package com.example.backendgram.user.controller;
 import com.example.backendgram.CommonResponseDto;
 import com.example.backendgram.jwt.JwtUtil;
 import com.example.backendgram.kakao.KakaoService;
-import com.example.backendgram.security.UserDetailsImpl;
+import com.example.backendgram.security.Impl.UserDetailsImpl;
 import com.example.backendgram.user.dto.SignupRequestDto;
 import com.example.backendgram.user.dto.UserInfoDto;
 import com.example.backendgram.user.entity.UserRoleEnum;

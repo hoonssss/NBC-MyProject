@@ -1,5 +1,6 @@
-package com.example.backendgram.security;
+package com.example.backendgram.security.filter;
 
+import com.example.backendgram.security.Impl.UserDetailsImpl;
 import com.example.backendgram.user.dto.LoginRequestDto;
 import com.example.backendgram.user.entity.UserRoleEnum;
 import com.example.backendgram.jwt.JwtUtil;

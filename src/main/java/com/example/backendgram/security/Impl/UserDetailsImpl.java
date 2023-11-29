@@ -1,4 +1,4 @@
-package com.example.backendgram.security;
+package com.example.backendgram.security.Impl;
 
 import com.example.backendgram.user.entity.User;
 import com.example.backendgram.user.entity.UserRoleEnum;

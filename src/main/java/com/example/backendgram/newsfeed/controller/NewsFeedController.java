@@ -4,17 +4,13 @@ import com.example.backendgram.CommonResponseDto;
 import com.example.backendgram.newsfeed.dto.NewsFeedRequestDto;
 import com.example.backendgram.newsfeed.dto.NewsFeedResponseDto;
 import com.example.backendgram.newsfeed.service.NewsFeedService;
-import com.example.backendgram.security.UserDetailsImpl;
-import com.example.backendgram.user.entity.User;
+import com.example.backendgram.security.Impl.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor

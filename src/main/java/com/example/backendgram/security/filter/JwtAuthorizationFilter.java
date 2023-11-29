@@ -1,7 +1,7 @@
-package com.example.backendgram.security;
+package com.example.backendgram.security.filter;
 
 import com.example.backendgram.jwt.JwtUtil;
-import com.example.backendgram.security.UserDetailsServiceImpl;
+import com.example.backendgram.security.Impl.UserDetailsServiceImpl;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

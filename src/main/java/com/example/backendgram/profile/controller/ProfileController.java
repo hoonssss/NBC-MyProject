@@ -4,7 +4,7 @@ import com.example.backendgram.profile.dto.PasswordUpdateRequestDto;
 import com.example.backendgram.profile.dto.ProfileRequestDto;
 import com.example.backendgram.profile.dto.ProfileResponseDto;
 import com.example.backendgram.profile.service.ProfileService;
-import com.example.backendgram.security.UserDetailsImpl;
+import com.example.backendgram.security.Impl.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

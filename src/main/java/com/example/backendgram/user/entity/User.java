@@ -9,7 +9,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -42,6 +44,17 @@ public class User {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<NewsfeedLike> likedNewsfeeds = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_follow",
+            joinColumns = @JoinColumn(name = "follower_id"),
+            inverseJoinColumns = @JoinColumn(name = "following_id")
+    )
+    private List<User> following = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "following")
+    private List<User> followers = new ArrayList<>();
 
     private Long kakaoId;
 

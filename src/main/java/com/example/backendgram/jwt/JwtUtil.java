@@ -1,6 +1,6 @@
 package com.example.backendgram.jwt;
 
-import com.example.backendgram.security.UserDetailsImpl;
+import com.example.backendgram.security.Impl.UserDetailsImpl;
 import com.example.backendgram.user.entity.UserRoleEnum;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;

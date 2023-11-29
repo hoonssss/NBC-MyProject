@@ -4,7 +4,7 @@ import com.example.backendgram.CommonResponseDto;
 import com.example.backendgram.comment.dto.CommentRequestDto;
 import com.example.backendgram.comment.dto.CommentResponseDto;
 import com.example.backendgram.comment.service.CommentService;
-import com.example.backendgram.security.UserDetailsImpl;
+import com.example.backendgram.security.Impl.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
