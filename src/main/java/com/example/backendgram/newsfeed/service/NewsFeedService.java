@@ -7,12 +7,14 @@ import com.example.backendgram.newsfeed.repository.NewsFeedRepository;
 import com.example.backendgram.security.UserDetailsImpl;
 import com.example.backendgram.user.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.concurrent.RejectedExecutionException;
@@ -22,6 +24,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class NewsFeedService {
 
+    @Autowired
     NewsFeedRepository newsFeedRepository;
 
     public NewsFeedResponseDto createNewsFeed(NewsFeedRequestDto newsFeedRequestDto, User user) {
@@ -33,7 +36,6 @@ public class NewsFeedService {
         return new NewsFeedResponseDto(newsFeed);
     }
 
-    //JH
     public List<NewsFeedResponseDto> getAllNewsFeed() {
         List<NewsFeed> newsFeeds = newsFeedRepository.findAll();
         return newsFeeds.stream().map(
@@ -63,30 +65,37 @@ public class NewsFeedService {
         return new NewsFeedResponseDto(newsFeed);
     }
 
+    @Transactional
     public NewsFeedResponseDto likeFeed(Long id, User user) {
         NewsFeed newsFeed = getFeed(id);
-
-        newsFeed.getLikes().add(user);
-        newsFeedRepository.save(newsFeed);
-        return convertToDto(newsFeed);
+        if(newsFeed.getLikes().contains(user)){
+            newsFeed.getLikes().add(user);
+            newsFeedRepository.save(newsFeed);
+            return convertToDto(newsFeed);
+        }else{
+            throw new RejectedExecutionException("좋아요 오류 발생");
+        }
     }
 
+    @Transactional
     public NewsFeedResponseDto unlikeFeed(Long id, User user) {
         NewsFeed newsFeed = getFeed(id);
-
-        newsFeed.getLikes().remove(user);
-        newsFeedRepository.save(newsFeed);
-
-        return convertToDto(newsFeed);
+        if(newsFeed.getLikes().contains(user)){
+            user.unlikeNewsfeed(newsFeed);
+            newsFeedRepository.save(newsFeed);
+            return convertToDto(newsFeed);
+        }else{
+            throw new RejectedExecutionException("좋아요 취소 오류 발생");
+        }
     }
 
-    public NewsFeedResponseDto convertToDto(NewsFeed newsFeed){
+    public NewsFeedResponseDto convertToDto(NewsFeed newsFeed) {
         NewsFeedResponseDto responseDTO = new NewsFeedResponseDto();
 
-        newsFeed.setId(newsFeed.getId());
-        newsFeed.setContent(newsFeed.getContent());
-
+        responseDTO.setId(newsFeed.getId());
+        responseDTO.setContent(newsFeed.getContent());
         responseDTO.setLikeCount(newsFeed.getLikes().size());
+
         return responseDTO;
     }
 

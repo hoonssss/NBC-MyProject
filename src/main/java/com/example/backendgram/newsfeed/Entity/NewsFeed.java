@@ -11,6 +11,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -38,8 +39,8 @@ public class NewsFeed {
     @OneToMany(mappedBy = "newsFeed")
     private List<Comment> commentList;
 
-    @ManyToMany
-    private List<User> likes = new ArrayList<>();
+    @OneToMany(mappedBy = "newsfeed")
+    private List<NewsfeedLike> newsfeedLikes = new ArrayList<>();
 
     public NewsFeed(NewsFeedRequestDto newsFeedRequestDto) {
         this.title = newsFeedRequestDto.getTitle();
@@ -47,16 +48,9 @@ public class NewsFeed {
         this.creatDate = LocalDateTime.now();
     }
 
-    public void setUser(User user){
-        this.user = user;
+    public List<User> getLikes() {
+        return newsfeedLikes.stream().map(
+                NewsfeedLike::getUser
+        ).collect(Collectors.toList());
     }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
 }

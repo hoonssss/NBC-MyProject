@@ -113,9 +113,6 @@ public class UserController {
             } else {
                 return "redirect:/error";
             }
-        } catch (UsernameNotFoundException e) {
-            log.error("사용자를 찾을 수 없음", e);
-            return "redirect:/error";
         } catch (Exception e) {
             log.error("로그아웃 중 오류 발생", e);
             return "redirect:/error";

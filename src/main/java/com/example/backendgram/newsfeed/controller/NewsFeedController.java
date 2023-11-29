@@ -28,16 +28,6 @@ public class NewsFeedController {
         return ResponseEntity.status(201).body(newsFeedResponseDto);
     }
 
-    @GetMapping("user/{id}")
-    public ResponseEntity<CommonResponseDto> getNewsFeed(@PathVariable Long id) {
-        try {
-            NewsFeedResponseDto newsFeedResponseDto = newsFeedService.getNewsFeed(id);
-            return ResponseEntity.ok().body(newsFeedResponseDto);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(new CommonResponseDto(e.getMessage(), HttpStatus.BAD_REQUEST.value()));
-        }
-    }
-
     @GetMapping("user/gets")
     public ResponseEntity<List<NewsFeedResponseDto>> getAllNewsFeeds(){
         try {
@@ -45,6 +35,16 @@ public class NewsFeedController {
             return ResponseEntity.ok().body(responseDTO);
         }catch (IllegalArgumentException e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("user/{id}")
+    public ResponseEntity<CommonResponseDto> getNewsFeed(@PathVariable Long id) {
+        try {
+            NewsFeedResponseDto newsFeedResponseDto = newsFeedService.getNewsFeed(id);
+            return ResponseEntity.ok().body(newsFeedResponseDto);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(new CommonResponseDto(e.getMessage(), HttpStatus.BAD_REQUEST.value()));
         }
     }
 

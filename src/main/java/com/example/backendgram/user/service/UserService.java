@@ -88,25 +88,26 @@ public class UserService {
         }
     }
 
-    @Transactional
-    public void deleteAccount(String username, String password) {
-        try {
-            User user = getUser(username, password);
-
-            userRepository.delete(user);
-
-            logout();
-        } catch (Exception e) {
-            throw e;
-        }
-    }
-
     private void logout() {
         try {
             SecurityContextHolder.clearContext(); // 컨텍스트를 지움
             new SecurityContextLogoutHandler().logout(null, null, null);
         } catch (Exception e) {
             throw new RuntimeException("로그아웃 실패.", e);
+        }
+    }
+
+    @Transactional
+    public void deleteAccount(String username, String password) {
+        try {
+            User user = getUser(username, password);
+            if(user != null && user.getUsername().equals(username) && passwordEncoder.matches(password,user.getPassword())){
+                userRepository.delete(user);
+                logout();
+            }
+        } catch (Exception e) {
+            log.error("에러 발생 : " + username, e);
+            throw e;
         }
     }
 
