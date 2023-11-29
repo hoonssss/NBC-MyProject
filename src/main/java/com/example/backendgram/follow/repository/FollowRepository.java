@@ -5,16 +5,12 @@ import com.example.backendgram.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Repository
 public interface FollowRepository extends JpaRepository<Follow, Long> {
-    void deleteByFollowerAndFollowing(User follower, User following);
+
+    void deleteByFollowerIdAndFollowingId(User followerId, User followingId);
 
     boolean existsByFollowerAndFollowing(User follower, User following);
-
-    List<Follow> findByFollower(User user);
-
-    List<Follow> findByFollowing(User user);
 }
