@@ -1,5 +1,6 @@
 package com.example.backendgram.comment.dto;
 
+import com.example.backendgram.CommonResponseDto;
 import com.example.backendgram.comment.entity.Comment;
 import com.example.backendgram.user.entity.User;
 import lombok.Getter;
@@ -9,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class CommentResponseDto {
+public class CommentResponseDto extends CommonResponseDto {
 
     private Long id;
     private String text;

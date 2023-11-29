@@ -30,7 +30,7 @@ public class CommentController {
     public ResponseEntity<CommonResponseDto> patchComment(@PathVariable Long commentId, @RequestBody CommentRequestDto commentRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         try {
             CommentResponseDto commentResponseDto = commentService.patchComment(commentId, commentRequestDto, userDetails.getUser());
-            return ResponseEntity.ok().body(new CommonResponseDto("댓글 수정 성공",HttpStatus.OK.value()));
+            return ResponseEntity.ok().body(commentResponseDto);
         } catch (RejectedExecutionException | IllegalArgumentException ex) {
             return ResponseEntity.badRequest().body(new CommonResponseDto(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
         }
@@ -40,7 +40,7 @@ public class CommentController {
     public ResponseEntity<CommonResponseDto> deleteComment(@PathVariable Long commentId, @RequestBody CommentRequestDto commentRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         try {
             CommentResponseDto commentResponseDto = commentService.deleteService(commentId, commentRequestDto, userDetails.getUser());
-            return ResponseEntity.ok().body(new CommonResponseDto("댓글 삭제 성공",HttpStatus.OK.value()));
+            return ResponseEntity.ok().body(commentResponseDto);
         } catch (RejectedExecutionException | IllegalArgumentException ex) {
             return ResponseEntity.badRequest().body(new CommonResponseDto(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
         }

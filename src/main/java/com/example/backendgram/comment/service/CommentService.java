@@ -10,6 +10,7 @@ import com.example.backendgram.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.RejectedExecutionException;
 
@@ -34,11 +35,12 @@ public class CommentService {
         return new CommentResponseDto(comment);
     }
 
+    @Transactional
     public CommentResponseDto patchComment(Long commentId, CommentRequestDto commentRequestDto, User user) {
         Comment comment = getComment(commentId, commentRequestDto, user);
 
         comment.setText(commentRequestDto.getText());
-        comment.setPassword(commentRequestDto.getPassword());
+
         return new CommentResponseDto(comment);
     }
 
