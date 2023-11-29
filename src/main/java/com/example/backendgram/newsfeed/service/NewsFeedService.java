@@ -50,8 +50,6 @@ public class NewsFeedService {
         Sort sort = Sort.by(direction,sortBy);
         Pageable pageable = PageRequest.of(page,size,sort);
 
-        UserRoleEnum userRoleEnum = user.getRole();
-
         Page<NewsFeed> newsFeeds;
 
         newsFeeds = newsFeedRepository.findAll(pageable);
