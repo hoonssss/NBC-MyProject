@@ -3,11 +3,14 @@ package com.example.backendgram.user.controller;
 
 import com.example.backendgram.CommonResponseDto;
 import com.example.backendgram.jwt.JwtUtil;
+import com.example.backendgram.kakao.KakaoService;
 import com.example.backendgram.security.UserDetailsImpl;
 import com.example.backendgram.user.dto.SignupRequestDto;
 import com.example.backendgram.user.dto.UserInfoDto;
 import com.example.backendgram.user.entity.UserRoleEnum;
 import com.example.backendgram.user.service.UserService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -18,7 +21,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -35,6 +37,7 @@ public class UserController {
 
     private final UserService userService;
     private final JwtUtil jwtUtil;
+    private final KakaoService kakaoService;
 
     @GetMapping("/user/login-page")
     public String loginPage() {
@@ -114,8 +117,19 @@ public class UserController {
                 return "redirect:/error";
             }
         } catch (Exception e) {
-            log.error("로그아웃 중 오류 발생", e);
             return "redirect:/error";
         }
+    }
+
+    //Kakao
+    @GetMapping("/user/kakao")
+    public String kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
+        String token = kakaoService.kakaoLogin(code);
+
+        Cookie cookie = new Cookie(JwtUtil.AUTHORIZATION_HEADER,token.substring(7));
+        cookie.setPath("/");
+        response.addCookie(cookie);
+
+        return "redirect:/";
     }
 }
