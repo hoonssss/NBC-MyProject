@@ -1,6 +1,8 @@
 package com.example.backendgram.newsfeed.controller;
 
 import com.example.backendgram.CommonResponseDto;
+import com.example.backendgram.newsFeedImage.dto.NewsFeedImageRequestDto;
+import com.example.backendgram.newsFeedImage.service.NewsFeedImageService;
 import com.example.backendgram.newsfeed.dto.NewsFeedRequestDto;
 import com.example.backendgram.newsfeed.dto.NewsFeedResponseDto;
 import com.example.backendgram.newsfeed.service.NewsFeedService;
@@ -10,7 +12,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 public class NewsFeedController {
 
     private final NewsFeedService newsFeedService;
+    private final NewsFeedImageService newsFeedImageService;
 
     @PostMapping("user/post")
     public ResponseEntity<NewsFeedResponseDto> createNewsFeed(@RequestBody NewsFeedRequestDto newsFeedRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -86,6 +91,16 @@ public class NewsFeedController {
     public ResponseEntity<NewsFeedResponseDto> unlikeFeed(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
         NewsFeedResponseDto newsFeedResponseDto = newsFeedService.unlikeFeed(id,userDetails.getUser());
         return ResponseEntity.ok().body(newsFeedResponseDto);
+    }
+
+    @PostMapping("/image")
+    public ResponseEntity<CommonResponseDto> setImage(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestParam("image") MultipartFile image) {
+        try {
+            newsFeedImageService.setImage(userDetails,image);
+            return ResponseEntity.ok().body(new CommonResponseDto("Image set successfully", HttpStatus.OK.value()));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(new CommonResponseDto(e.getMessage(), HttpStatus.BAD_REQUEST.value()));
+        }
     }
 
 

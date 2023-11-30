@@ -79,7 +79,8 @@ public class NewsFeedService {
     public NewsFeedResponseDto likeFeed(Long id, User user) {
         NewsFeed newsFeed = getFeed(id);
         if(!newsFeed.getLikes().contains(user)){
-            newsFeed.getLikes().add(user);
+//            newsFeed.getLikes().add(user);
+            user.likeNewsfeed(newsFeed);
             newsFeedRepository.save(newsFeed);
             return convertToDto(newsFeed);
         }else{

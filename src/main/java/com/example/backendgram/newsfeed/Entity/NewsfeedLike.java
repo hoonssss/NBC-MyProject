@@ -10,6 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@Table(name = "news_feed_like")
 public class NewsfeedLike {
 
     @Id

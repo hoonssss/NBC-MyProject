@@ -1,5 +1,6 @@
 package com.example.backendgram.user.entity;
 
+import com.example.backendgram.newsFeedImage.entity.NewsFeedImage;
 import com.example.backendgram.newsfeed.Entity.NewsFeed;
 import com.example.backendgram.newsfeed.Entity.NewsfeedLike;
 import com.example.backendgram.profile.entity.Profile;
@@ -9,9 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -65,12 +64,6 @@ public class User {
         this.role = role;
     }
 
-    public void likeNewsfeed(NewsFeed newsFeed){
-        NewsfeedLike newsfeedLike = new NewsfeedLike(this,newsFeed);
-        likedNewsfeeds.add(newsfeedLike);
-        newsFeed.getNewsfeedLikes().add(newsfeedLike);
-    }
-
     public void unlikeNewsfeed(NewsFeed newsfeed) {
         likedNewsfeeds.removeIf(like -> like.getNewsfeed().equals(newsfeed));
         newsfeed.getNewsfeedLikes().removeIf(like -> like.getUser().equals(this));
@@ -82,6 +75,13 @@ public class User {
 //        }
 //        newsfeed.setNewsfeedLikes(newsfeedLikes);
     }
+
+    public void likeNewsfeed(NewsFeed newsFeed){
+        NewsfeedLike newsfeedLike = new NewsfeedLike(this,newsFeed);
+        likedNewsfeeds.add(newsfeedLike);
+        newsFeed.getNewsfeedLikes().add(newsfeedLike);
+    }
+
 
     public User(User user) {
         this.username = user.getUsername();
