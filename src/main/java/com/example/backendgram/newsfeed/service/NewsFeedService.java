@@ -1,12 +1,15 @@
 package com.example.backendgram.newsfeed.service;
 
+import com.example.backendgram.folder.entity.Folder;
+import com.example.backendgram.folder.entity.NewsfeedFolder;
+import com.example.backendgram.folder.repository.FolderRepository;
 import com.example.backendgram.newsfeed.Entity.NewsFeed;
 import com.example.backendgram.newsfeed.dto.NewsFeedRequestDto;
 import com.example.backendgram.newsfeed.dto.NewsFeedResponseDto;
 import com.example.backendgram.newsfeed.repository.NewsFeedRepository;
+import com.example.backendgram.newsfeed.repository.NewsfeedFolderRepository;
 import com.example.backendgram.user.entity.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,14 +17,17 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.concurrent.RejectedExecutionException;
 
 @Service
 @RequiredArgsConstructor
 public class NewsFeedService {
 
-    @Autowired
-    NewsFeedRepository newsFeedRepository;
+    private final NewsFeedRepository newsFeedRepository;
+    private final FolderRepository folderRepository;
+    private final NewsfeedFolderRepository newsfeedFolderRepository;
+
 
     public NewsFeedResponseDto createNewsFeed(NewsFeedRequestDto newsFeedRequestDto, User user) {
         NewsFeed newsFeed = new NewsFeed(newsFeedRequestDto);
@@ -125,4 +131,33 @@ public class NewsFeedService {
         return newsFeed;
     }
 
+    public void addFolder(Long newsfeedId, Long folderId, User user) { //게시글 폴더 추가
+        NewsFeed newsFeed = newsFeedRepository.findById(newsfeedId).orElseThrow(
+                () -> new NullPointerException("해당 게시글이 존재하지 않습니다.")
+        );
+        Folder folder = folderRepository.findById(folderId).orElseThrow(
+                () -> new NullPointerException("해당 폴더가 존재하지 않습니다.")
+        );
+        if(!newsFeed.getUser().getId().equals(user.getId()) || !folder.getUser().getId().equals(user.getId())){
+            throw new IllegalArgumentException("회원님의 관싱상품이 아니거나, 회원님의 폴더가 아닙니다.");
+        }
+        Optional<NewsfeedFolder> overlapFolder = newsfeedFolderRepository.findByNewsFeedAndFolder(newsFeed, folder);
+        if(overlapFolder.isPresent()){
+            throw new IllegalArgumentException("중복된 폴더입니다.");
+        }
+        newsfeedFolderRepository.save(new NewsfeedFolder(newsFeed,folder));
+    }
+
+    public Page<NewsFeedResponseDto> getNewsfeedsInFolder(Long folderId, int page, int size, String sortBy, boolean isAsc, User user) {
+
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction,sortBy);
+        Pageable pageable = PageRequest.of(page,size,sort);
+
+        //현재 로그인한 user가 등록한 특정 폴더에 속해있는 newsfeed_id를 기준으로 newsfeed를 가져옴
+        Page<NewsFeed> NewsfeedList = newsFeedRepository.findAllByUserAndNewsfeedFolders_FolderId(user, folderId, pageable);
+
+        Page<NewsFeedResponseDto> responseDtoList = NewsfeedList.map(NewsFeedResponseDto::new);
+        return responseDtoList;
+    }
 }

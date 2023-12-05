@@ -2,6 +2,7 @@ package com.example.backendgram.user.controller;
 
 
 import com.example.backendgram.CommonResponseDto;
+import com.example.backendgram.folder.service.FolderService;
 import com.example.backendgram.jwt.JwtUtil;
 import com.example.backendgram.kakao.KakaoService;
 import com.example.backendgram.security.Impl.UserDetailsImpl;
@@ -23,6 +24,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -35,8 +37,8 @@ import java.util.List;
 @RequestMapping("/api")
 public class UserController {
 
+    private final FolderService folderService;
     private final UserService userService;
-    private final JwtUtil jwtUtil;
     private final KakaoService kakaoService;
 
     @GetMapping("/user/login-page")
@@ -131,5 +133,11 @@ public class UserController {
         response.addCookie(cookie);
 
         return "redirect:/";
+    }
+
+    @GetMapping("/user-folder")
+    public String getUserInfo(Model model, @AuthenticationPrincipal UserDetailsImpl userDetails){ //동적 처리를 위해 Model 사용
+        model.addAttribute("folders",folderService.getFolders(userDetails.getUser()));//body -> json 전달
+        return "index :: #fragment"; //추가로 데이터를 줌
     }
 }

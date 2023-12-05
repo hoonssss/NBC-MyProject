@@ -1,6 +1,5 @@
 package com.example.backendgram.user.entity;
 
-import com.example.backendgram.newsFeedImage.entity.NewsFeedImage;
 import com.example.backendgram.newsfeed.Entity.NewsFeed;
 import com.example.backendgram.newsfeed.Entity.NewsfeedLike;
 import com.example.backendgram.profile.entity.Profile;
@@ -74,6 +73,7 @@ public class User {
 //            }
 //        }
 //        newsfeed.setNewsfeedLikes(newsfeedLikes);
+
     }
 
     public void likeNewsfeed(NewsFeed newsFeed){

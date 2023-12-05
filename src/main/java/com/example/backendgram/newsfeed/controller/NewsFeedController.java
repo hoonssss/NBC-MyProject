@@ -1,7 +1,6 @@
 package com.example.backendgram.newsfeed.controller;
 
 import com.example.backendgram.CommonResponseDto;
-import com.example.backendgram.newsFeedImage.dto.NewsFeedImageRequestDto;
 import com.example.backendgram.newsFeedImage.service.NewsFeedImageService;
 import com.example.backendgram.newsfeed.dto.NewsFeedRequestDto;
 import com.example.backendgram.newsfeed.dto.NewsFeedResponseDto;
@@ -12,7 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -101,6 +99,23 @@ public class NewsFeedController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(new CommonResponseDto(e.getMessage(), HttpStatus.BAD_REQUEST.value()));
         }
+    }
+
+    @PostMapping("/folder/{newsfeedId}/folder")
+    public void addFolder(@PathVariable Long newsfeedId, @RequestParam Long folderId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        newsFeedService.addFolder(newsfeedId,folderId,userDetails.getUser());
+    }
+
+    @GetMapping("/folders/{folderId}/newsfeed")
+    public Page<NewsFeedResponseDto> getProductsInFolder(
+            @PathVariable Long folderId,
+            @RequestParam("page") int page,
+            @RequestParam("size") int size,
+            @RequestParam("sortBy") String sortBy,
+            @RequestParam("isAsc") boolean isAsc,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        return newsFeedService.getNewsfeedsInFolder(folderId,page-1,size,sortBy,isAsc,userDetails.getUser());
     }
 
 

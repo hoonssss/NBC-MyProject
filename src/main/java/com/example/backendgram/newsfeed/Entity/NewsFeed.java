@@ -1,6 +1,7 @@
 package com.example.backendgram.newsfeed.Entity;
 
 import com.example.backendgram.comment.entity.Comment;
+import com.example.backendgram.folder.entity.NewsfeedFolder;
 import com.example.backendgram.newsFeedImage.entity.NewsFeedImage;
 import com.example.backendgram.newsfeed.dto.NewsFeedRequestDto;
 import com.example.backendgram.user.entity.User;
@@ -46,6 +47,9 @@ public class NewsFeed {
     @OneToMany(mappedBy = "newsFeed", cascade = CascadeType.REMOVE)
     @OrderBy("id asc")
     private List<NewsFeedImage> images = new ArrayList<>();
+
+    @OneToMany(mappedBy = "newsfeedFolder")
+    private List<NewsfeedFolder> newsfeedFolders = new ArrayList<>();
 
     public NewsFeed(NewsFeedRequestDto newsFeedRequestDto) {
         this.title = newsFeedRequestDto.getTitle();

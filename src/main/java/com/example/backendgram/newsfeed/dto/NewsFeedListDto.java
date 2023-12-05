@@ -14,5 +14,4 @@ public class NewsFeedListDto {
     private User user;
     private List<NewsFeedRepository> newsFeedRepositories;
 
-
 }
