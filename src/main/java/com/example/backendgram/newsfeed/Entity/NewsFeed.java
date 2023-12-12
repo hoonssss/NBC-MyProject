@@ -39,7 +39,7 @@ public class NewsFeed {
     private User user;
 
     @OneToMany(mappedBy = "newsFeed")
-    private List<Comment> commentList;
+    private List<Comment> commentList = new ArrayList<>();
 
     @OneToMany(mappedBy = "newsfeed")
     private List<NewsfeedLike> newsfeedLikes = new ArrayList<>();
