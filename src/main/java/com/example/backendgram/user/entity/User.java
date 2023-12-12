@@ -38,7 +38,7 @@ public class User {
     private Profile profile;
 
     @OneToMany(mappedBy = "user")
-    private List<NewsFeed> newsfeed;
+    private List<NewsFeed> newsfeed = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<NewsfeedLike> likedNewsfeeds = new ArrayList<>();
@@ -63,25 +63,16 @@ public class User {
         this.role = role;
     }
 
-    public void unlikeNewsfeed(NewsFeed newsfeed) {
-        likedNewsfeeds.removeIf(like -> like.getNewsfeed().equals(newsfeed));
-        newsfeed.getNewsfeedLikes().removeIf(like -> like.getUser().equals(this));
-//        List<NewsfeedLike> newsfeedLikes = new ArrayList<>();
-//        for(NewsfeedLike like : newsfeed.getNewsfeedLikes()){
-//            if(!like.getUser().equals(this)){
-//                newsfeedLikes.add(like);
-//            }
-//        }
-//        newsfeed.setNewsfeedLikes(newsfeedLikes);
-
-    }
-
     public void likeNewsfeed(NewsFeed newsFeed){
         NewsfeedLike newsfeedLike = new NewsfeedLike(this,newsFeed);
         likedNewsfeeds.add(newsfeedLike);
         newsFeed.getNewsfeedLikes().add(newsfeedLike);
     }
 
+    public void unlikeNewsfeed(NewsFeed newsfeed) {
+        likedNewsfeeds.removeIf(like -> like.getNewsfeed().equals(newsfeed));
+        newsfeed.getNewsfeedLikes().removeIf(like -> like.getUser().equals(this));
+    }
 
     public User(User user) {
         this.username = user.getUsername();
