@@ -50,7 +50,7 @@ public class Comment {
 
     public void setNewsFeed(NewsFeed newsFeed){
         this.newsFeed = newsFeed;
-        newsFeed.getCommentList().add(this);
+        newsFeed.addComment(this);
     }
 
     public void setText(String text){

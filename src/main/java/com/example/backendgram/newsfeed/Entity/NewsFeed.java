@@ -44,7 +44,7 @@ public class NewsFeed {
     @OneToMany(mappedBy = "newsfeed")
     private List<NewsfeedLike> newsfeedLikes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "newsFeed", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "newsFeed", cascade = CascadeType.ALL)
     @OrderBy("id asc")
     private List<NewsFeedImage> images = new ArrayList<>();
 
@@ -61,5 +61,9 @@ public class NewsFeed {
         return newsfeedLikes.stream().map(
                 NewsfeedLike::getUser
         ).collect(Collectors.toList());
+    }
+
+    public void addComment(Comment comment){
+        this.commentList.add(comment);
     }
 }
