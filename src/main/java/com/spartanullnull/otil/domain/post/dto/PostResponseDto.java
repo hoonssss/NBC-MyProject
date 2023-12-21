@@ -10,7 +10,7 @@ import lombok.*;
 @Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class PostResponseDto extends CommonResponseDto {
 
     private Long id;
@@ -48,4 +48,5 @@ public class PostResponseDto extends CommonResponseDto {
             .createdAt(post.getCreatedAt())
             .build();
     }
+
 }

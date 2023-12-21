@@ -59,7 +59,7 @@ public class CommentController {
         // 현재 로그인한 사용자의 ID를 가져옴
         Long userId = userDetails.getUser().getId();
 
-        CommentResponseDto updatedComment = commentService.updateComment(commentId, userId ,requestDto);
+        CommentResponseDto updatedComment = commentService.updateComment(userId ,commentId ,requestDto);
         return new ResponseEntity<>(updatedComment, HttpStatus.OK);
     }
 

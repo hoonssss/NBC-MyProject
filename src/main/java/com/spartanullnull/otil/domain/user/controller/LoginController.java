@@ -54,7 +54,7 @@ public class LoginController {
                 return ResponseEntity.ok()
                     .body(new CommonResponseDto("로그아웃 성공", HttpStatus.OK.value()));
             }
-        } catch (RuntimeException e) {
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest()
                 .body(new CommonResponseDto("로그아웃 실패", HttpStatus.BAD_REQUEST.value()));
         }
@@ -74,7 +74,7 @@ public class LoginController {
 
             return ResponseEntity.ok()
                 .body(new CommonResponseDto("Kakao 로그인 성공", HttpStatus.OK.value()));
-        } catch (RuntimeException e) {
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest()
                 .body(new CommonResponseDto("Kakao 로그인 실패", HttpStatus.BAD_REQUEST.value()));
         }

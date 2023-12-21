@@ -61,9 +61,13 @@ public class CategoryService {
      * @return 카테고리 엔티티 리스트
      */
     public List<Category> getCategoriesByRequest(List<String> categoryInputs) {
+        if (categoryInputs == null) {
+            throw new IllegalArgumentException("카테고리가 없습니다.");
+        }
+
         return categoryInputs.stream()
-            .map(buildCategoryByRequest()
-            ).toList();
+            .map(buildCategoryByRequest())
+            .toList();
     }
 
     /**
