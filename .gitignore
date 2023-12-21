@@ -35,16 +35,8 @@ out/
 
 ### VS Code ###
 .vscode/
-<<<<<<< HEAD
-<<<<<<< HEAD
 
 ### yml ###
 src/main/resources/application.yml
-=======
 application.yml
->>>>>>> origin/develop
-=======
 
-# Ignore application.yml
-application.yml
->>>>>>> d99aeb470c1a62f0460f72c40ad5db232e8e2444
