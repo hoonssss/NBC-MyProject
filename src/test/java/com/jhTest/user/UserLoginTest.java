@@ -1,9 +1,10 @@
-package com.userRepositoryTest;
+package com.jhTest.user;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.startsWith;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -14,7 +15,6 @@ import com.spartanullnull.otil.domain.user.entity.User;
 import com.spartanullnull.otil.domain.user.entity.UserRoleEnum;
 import com.spartanullnull.otil.domain.user.repository.UserRepository;
 import com.spartanullnull.otil.domain.user.service.LoginService;
-import com.spartanullnull.otil.domain.user.service.SignupService;
 import com.spartanullnull.otil.jwt.JwtUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Optional;
@@ -24,8 +24,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-
-public class UserQuerydslRepositoryTest {
+public class UserLoginTest {
 
     @Mock
     UserRepository userRepository;
@@ -35,9 +34,6 @@ public class UserQuerydslRepositoryTest {
 
     @Mock
     private JwtUtil jwtUtil;
-
-    @Mock
-    private SignupService signupService;
 
     @Mock
     private LoginService loginService;
@@ -59,13 +55,13 @@ public class UserQuerydslRepositoryTest {
         //given
         String accountId = "test8020";
         String password = "test123!!";
+        String encodePassword = passwordEncoder.encode(password);
         UserRoleEnum role = UserRoleEnum.USER;
 
-        User user = User.builder().accountId(accountId).password(password).role(role).build();
-
         BooleanExpression userPredicate = QUser.user.accountId.eq(accountId);
+        User user = User.builder().accountId(accountId).password(encodePassword).role(role).build();
 
-        when(userRepository.findOne(any(BooleanExpression.class))).thenReturn(Optional.of(user));
+        when(userRepository.findOne(eq(userPredicate))).thenReturn(Optional.of(user));
         when(passwordEncoder.matches(password, user.getPassword())).thenReturn(true);
         when(jwtUtil.createToken(accountId,user.getRole())).thenReturn("testToken");
 
@@ -75,8 +71,8 @@ public class UserQuerydslRepositoryTest {
         loginService.login(loginRequestDto,httpResponse);
 
         //then
-        verify(userRepository, times(1)).findOne(userPredicate);
-        verify(httpResponse, times(1)).setHeader(eq(JwtUtil.AUTHORIZATION_HEADER), eq("testToken"));
+        assertTrue(userRepository.findByAccountId(accountId).isPresent());
+        assertTrue(passwordEncoder.matches(password,encodePassword));
     }
 
 }

@@ -1,5 +1,6 @@
 package com.spartanullnull.otil.domain.reportpost.service;
 
+import com.spartanullnull.otil.domain.reportpost.dto.PageRequestDto;
 import com.spartanullnull.otil.domain.reportpost.dto.ReportPostRequestDto;
 import com.spartanullnull.otil.domain.reportpost.dto.ReportPostResponseDto;
 import com.spartanullnull.otil.domain.reportpost.entity.ReportPost;
@@ -28,11 +29,8 @@ public class ReportPostService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ReportPostResponseDto> getUserAllReportPost(User user, int page,
-        int size, String sortBy, boolean isAsc) {
-        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Sort sort = Sort.by(direction, sortBy);
-        Pageable pageable = PageRequest.of(page, size, sort);
+    public Page<ReportPostResponseDto> getUserAllReportPost(User user, PageRequestDto page) {
+        Pageable pageable = page.toPageable();
 
         Page<ReportPost> reportPosts = reportPostRepository.findByUser(user, pageable);
 
@@ -40,11 +38,9 @@ public class ReportPostService {
     }
 
     @Transactional
-    public Page<ReportPostResponseDto> getAdminAllReportPost(int page, int size,
-        String sortBy, boolean isAsc) {
-        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Sort sort = Sort.by(direction, sortBy);
-        Pageable pageable = PageRequest.of(page, size, sort);
+    public Page<ReportPostResponseDto> getAdminAllReportPost(PageRequestDto page) {
+        Pageable pageable = page.toPageable();
+
         Page<ReportPost> reportPosts = reportPostRepository.findAll(pageable);
 
         if (reportPosts != null) {

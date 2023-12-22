@@ -1,5 +1,6 @@
 package com.spartanullnull.otil.domain.user.dto;
 
+import com.spartanullnull.otil.domain.user.entity.UserRoleEnum;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -29,4 +30,10 @@ public class SignupRequestDto {
     @NotNull
     private String adminToken = "";
 
+    public SignupRequestDto(String accountId, String password, String nickname, String email) {
+        this.accountId = accountId;
+        this.password = password;
+        this.nickname = nickname;
+        this.email = email;
+    }
 }

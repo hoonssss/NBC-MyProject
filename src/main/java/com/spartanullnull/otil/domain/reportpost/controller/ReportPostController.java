@@ -50,10 +50,9 @@ public class ReportPostController {
         @RequestBody ReportPostRequestDto requestDto,
         @Valid @ModelAttribute PageRequestDto page,
         @AuthenticationPrincipal UserDetailsImpl user) {
-        System.out.println(user.getUser().getRole());
         if (getsValidUser(user, requestDto) && user.getUser().getRole() == UserRoleEnum.USER) {
             Page<ReportPostResponseDto> reports = reportPostService.getUserAllReportPost(
-                user.getUser(), page.getPage() - 1, page.getSize(), page.getSortBy(), page.isAsc());
+                user.getUser(), page);
             return ResponseEntity.ok().body(reports);
         } else {
             return ResponseEntity.badRequest().build();
@@ -66,8 +65,7 @@ public class ReportPostController {
         @Valid @ModelAttribute PageRequestDto page,
         @AuthenticationPrincipal UserDetailsImpl user) {
         if (getsValidAdmin(user, requestDto) && user.getUser().getRole() == UserRoleEnum.ADMIN) {
-            Page<ReportPostResponseDto> reports = reportPostService.getAdminAllReportPost(page.getPage() - 1,
-                page.getSize(), page.getSortBy(), page.isAsc());
+            Page<ReportPostResponseDto> reports = reportPostService.getAdminAllReportPost(page);
             return ResponseEntity.ok().body(reports);
         } else {
             return ResponseEntity.badRequest().build();
