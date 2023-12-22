@@ -19,6 +19,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
@@ -26,6 +27,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @NoArgsConstructor
 @Table(name = "user")
 @DynamicUpdate
+@DynamicInsert
 public class User {
 
     @Id
