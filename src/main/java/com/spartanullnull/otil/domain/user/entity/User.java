@@ -51,7 +51,7 @@ public class User {
     @NotNull
     private UserRoleEnum role;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReportPost> reportPost = new ArrayList<>();
 
     private Long kakaoId;
