@@ -3,10 +3,11 @@ package com.spartanullnull.otil.domain.user.repository;
 import com.spartanullnull.otil.domain.user.entity.*;
 import java.util.*;
 import org.springframework.data.jpa.repository.*;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.stereotype.*;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Long>, QuerydslPredicateExecutor<User>{
 
     Optional<User> findByAccountId(String accountId);
 

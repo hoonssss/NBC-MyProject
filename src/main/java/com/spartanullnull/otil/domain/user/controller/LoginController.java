@@ -1,21 +1,27 @@
 package com.spartanullnull.otil.domain.user.controller;
 
-import com.fasterxml.jackson.core.*;
-import com.spartanullnull.otil.domain.user.dto.*;
-import com.spartanullnull.otil.domain.user.entity.User;
-import com.spartanullnull.otil.domain.user.entity.UserRoleEnum;
-import com.spartanullnull.otil.domain.user.exception.RestApiException;
-import com.spartanullnull.otil.domain.user.service.*;
-import com.spartanullnull.otil.global.dto.*;
-import com.spartanullnull.otil.jwt.*;
-import jakarta.servlet.http.*;
-import javax.security.auth.login.LoginException;
-import lombok.*;
-import org.springframework.http.*;
-import org.springframework.security.core.*;
-import org.springframework.security.core.context.*;
-import org.springframework.security.web.authentication.logout.*;
-import org.springframework.web.bind.annotation.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.spartanullnull.otil.domain.user.dto.LoginRequestDto;
+import com.spartanullnull.otil.domain.user.service.KakaoService;
+import com.spartanullnull.otil.domain.user.service.LoginService;
+import com.spartanullnull.otil.global.dto.ApiResponseDto;
+import com.spartanullnull.otil.global.dto.CommonResponseDto;
+import com.spartanullnull.otil.jwt.JwtUtil;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "/api")

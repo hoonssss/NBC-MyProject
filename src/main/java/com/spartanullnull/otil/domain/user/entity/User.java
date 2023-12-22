@@ -16,13 +16,14 @@ import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @Table(name = "user")
 @DynamicUpdate
 public class User {
@@ -83,6 +84,13 @@ public class User {
         this.password = password;
         this.nickname = userProfileModifyRequestDto.nickname();
         this.email = userProfileModifyRequestDto.email();
+        this.role = role;
+    }
+
+    @Builder
+    public User(String accountId, String password, UserRoleEnum role){
+        this.accountId = accountId;
+        this.password = password;
         this.role = role;
     }
 }

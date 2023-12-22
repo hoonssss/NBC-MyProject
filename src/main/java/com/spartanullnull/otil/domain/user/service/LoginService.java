@@ -1,14 +1,14 @@
 package com.spartanullnull.otil.domain.user.service;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.spartanullnull.otil.domain.user.dto.LoginRequestDto;
+import com.spartanullnull.otil.domain.user.entity.QUser;
 import com.spartanullnull.otil.domain.user.entity.User;
 import com.spartanullnull.otil.domain.user.entity.UserRoleEnum;
 import com.spartanullnull.otil.domain.user.repository.UserRepository;
 import com.spartanullnull.otil.jwt.JwtUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,16 +23,34 @@ public class LoginService {
     public void login(LoginRequestDto requestDto, HttpServletResponse response) {
         String accountId = requestDto.getAccountId();
 
-        User user = userRepository.findByAccountId(accountId).orElseThrow(
-            () -> new UsernameNotFoundException("등록된 accountId가 존재하지 않습니다.")
+        QUser qUser = QUser.user;
+        BooleanExpression userPredicate = qUser.accountId.eq(accountId);
+
+        User user = userRepository.findOne(userPredicate).orElseThrow(
+            () -> new NullPointerException("등록된 ID가 존재하지 않습니다.")
         );
 
-        if(passwordEncoder.matches(requestDto.getPassword(),user.getPassword())){
+        if (passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
             UserRoleEnum role = user.getRole();
-            response.setHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getAccountId(), role));
+            response.setHeader(JwtUtil.AUTHORIZATION_HEADER,
+                jwtUtil.createToken(user.getAccountId(), role));
         }
     }
 }
+
+//    public void login(LoginRequestDto requestDto, HttpServletResponse response) {
+//        String accountId = requestDto.getAccountId();
+//
+//        User user = userRepository.findByAccountId(accountId).orElseThrow(
+//            () -> new UsernameNotFoundException("등록된 accountId가 존재하지 않습니다.")
+//        );
+//
+//        if(passwordEncoder.matches(requestDto.getPassword(),user.getPassword())){
+//            UserRoleEnum role = user.getRole();
+//            response.setHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getAccountId(), role));
+//        }
+//    }
+//}
 
 //    public String login(String accountId, String password) {
 //        try {
