@@ -39,6 +39,9 @@ public class ReportPost {
     @Column
     @NotNull
     private String content;
+    
+    @Column
+    private String imageUrl;
 
     public ReportPost(ReportPostRequestDto requestDto) {
         this.id = requestDto.getId();
@@ -61,5 +64,9 @@ public class ReportPost {
 
     public void setName(String name){
         this.name = name;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

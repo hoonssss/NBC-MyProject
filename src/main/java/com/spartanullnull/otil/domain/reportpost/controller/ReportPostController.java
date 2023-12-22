@@ -8,6 +8,7 @@ import com.spartanullnull.otil.domain.user.entity.UserRoleEnum;
 import com.spartanullnull.otil.global.dto.CommonResponseDto;
 import com.spartanullnull.otil.security.Impl.UserDetailsImpl;
 import jakarta.validation.Valid;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/report")
@@ -36,10 +38,11 @@ public class ReportPostController {
     @PostMapping
     public ResponseEntity<ReportPostResponseDto> createReport(
         @RequestBody ReportPostRequestDto requestDto,
-        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
+        @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
         if (isMatches(requestDto, userDetails)) {
             ReportPostResponseDto reportPostResponseDto = reportPostService.createReport(requestDto,
-                userDetails.getUser());
+                userDetails.getUser(), imageFile);
             return ResponseEntity.ok().body(reportPostResponseDto);
         }
         return ResponseEntity.badRequest().build();
