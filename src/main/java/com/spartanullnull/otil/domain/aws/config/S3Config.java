@@ -1,4 +1,4 @@
-package com.spartanullnull.otil.domain.reportpost.config;
+package com.spartanullnull.otil.domain.aws.config;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -20,12 +20,17 @@ public class S3Config {
     @Value("${cloud.aws.region.static}")
     private String region;
 
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
+
     @Bean
     public AmazonS3Client amazonS3Client() {
-        BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, secretKey);
-        return (AmazonS3Client) AmazonS3ClientBuilder.standard()
+        BasicAWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
+
+        return (AmazonS3Client) AmazonS3ClientBuilder
+            .standard()
             .withRegion(region)
-            .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
+            .withCredentials(new AWSStaticCredentialsProvider(credentials))
             .build();
     }
 }

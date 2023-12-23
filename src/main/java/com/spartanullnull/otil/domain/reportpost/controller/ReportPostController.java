@@ -1,14 +1,13 @@
 package com.spartanullnull.otil.domain.reportpost.controller;
 
 import com.spartanullnull.otil.domain.reportpost.dto.PageRequestDto;
-import com.spartanullnull.otil.domain.reportpost.service.ReportPostService;
 import com.spartanullnull.otil.domain.reportpost.dto.ReportPostRequestDto;
 import com.spartanullnull.otil.domain.reportpost.dto.ReportPostResponseDto;
+import com.spartanullnull.otil.domain.reportpost.service.ReportPostService;
 import com.spartanullnull.otil.domain.user.entity.UserRoleEnum;
 import com.spartanullnull.otil.global.dto.CommonResponseDto;
 import com.spartanullnull.otil.security.Impl.UserDetailsImpl;
 import jakarta.validation.Valid;
-import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -23,9 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/report")
@@ -33,16 +30,16 @@ import org.springframework.web.multipart.MultipartFile;
 public class ReportPostController {
 
     private final ReportPostService reportPostService;
+
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping
     public ResponseEntity<ReportPostResponseDto> createReport(
         @RequestBody ReportPostRequestDto requestDto,
-        @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
-        @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+        @AuthenticationPrincipal UserDetailsImpl userDetails) {
         if (isMatches(requestDto, userDetails)) {
             ReportPostResponseDto reportPostResponseDto = reportPostService.createReport(requestDto,
-                userDetails.getUser(), imageFile);
+                userDetails.getUser());
             return ResponseEntity.ok().body(reportPostResponseDto);
         }
         return ResponseEntity.badRequest().build();
