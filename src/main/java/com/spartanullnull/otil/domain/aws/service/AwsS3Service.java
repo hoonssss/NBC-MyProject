@@ -12,7 +12,10 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -46,6 +49,18 @@ public class AwsS3Service {
         });
 
         return fileNameList;
+    }
+
+    public ResponseEntity<UrlResource> downloadImage(String originalFilename) {
+        UrlResource urlResource = new UrlResource(amazonS3.getUrl(bucket, originalFilename));
+
+        String contentDisposition = "attachment; filename=\"" +  originalFilename + "\"";
+
+        // header에 CONTENT_DISPOSITION 설정을 통해 클릭 시 다운로드 진행
+        return ResponseEntity.ok()
+            .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+            .body(urlResource);
+
     }
 
     public void deleteImage(String fileName) {

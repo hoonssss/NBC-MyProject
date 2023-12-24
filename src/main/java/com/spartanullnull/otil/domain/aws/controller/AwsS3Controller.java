@@ -2,11 +2,14 @@ package com.spartanullnull.otil.domain.aws.controller;
 
 import com.spartanullnull.otil.domain.aws.service.AwsS3Service;
 import com.spartanullnull.otil.global.dto.CommonResponseDto;
+import java.net.MalformedURLException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +29,11 @@ public class AwsS3Controller {
         @RequestParam("files") List<MultipartFile> files) {
         List<String> fileNames = awsS3Service.uploadImage(files);
         return ResponseEntity.ok().body(fileNames);
+    }
+
+    @GetMapping("/download/{filename}")
+    public ResponseEntity<UrlResource> downloadImage(@PathVariable String filename) throws MalformedURLException {
+        return awsS3Service.downloadImage(filename);
     }
 
     @DeleteMapping("/delete-image/{fileName}")
