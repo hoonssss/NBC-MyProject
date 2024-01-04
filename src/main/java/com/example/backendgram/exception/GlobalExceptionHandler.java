@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({NewsfeedNotFoundException.class})
-    public ResponseEntity<RestApiException> newFeedNotFoundException(NotFoundException ex){
+    public ResponseEntity<?> newFeedNotFoundException(NotFoundException ex){
         RestApiException restApiException = new RestApiException(ex.getMessage(), HttpStatus.NOT_FOUND.value());
         return new ResponseEntity<>(restApiException, HttpStatus.NOT_FOUND);
     }
