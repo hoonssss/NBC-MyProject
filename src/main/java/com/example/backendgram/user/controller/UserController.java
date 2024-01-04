@@ -1,9 +1,10 @@
 package com.example.backendgram.user.controller;
 
 
-import com.example.backendgram.CommonResponseDto;
 import com.example.backendgram.folder.service.FolderService;
 import com.example.backendgram.jwt.JwtUtil;
+import com.example.backendgram.jwt.TokenStore;
+import com.example.backendgram.jwt.Tokens;
 import com.example.backendgram.kakao.KakaoService;
 import com.example.backendgram.security.Impl.UserDetailsImpl;
 import com.example.backendgram.user.dto.SignupRequestDto;
@@ -15,9 +16,9 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -27,9 +28,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Slf4j
 @Controller
@@ -40,6 +43,8 @@ public class UserController {
     private final FolderService folderService;
     private final UserService userService;
     private final KakaoService kakaoService;
+    private final TokenStore tokenStore;
+    private final JwtUtil jwtUtil;
 
     @GetMapping("/user/login-page")
     public String loginPage() {
@@ -72,12 +77,22 @@ public class UserController {
     }
 
     @PostMapping("user/login")
-    public ResponseEntity<CommonResponseDto> login(@RequestParam String username, @RequestParam String password) {
+    public ResponseEntity<Tokens> login(@RequestParam String username, @RequestParam String password) {
         try {
-            userService.login(username, password);
-            return ResponseEntity.ok().body(new CommonResponseDto("로그인 성공", HttpStatus.OK.value()));
+            Tokens tokens = userService.login(username, password);
+            return ResponseEntity.ok(tokens);
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(new CommonResponseDto("로그인 실패", HttpStatus.BAD_REQUEST.value()));
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PostMapping("/refresh-tokens")
+    public ResponseEntity<Tokens> refreshTokens(@RequestParam String refreshToken) {
+        try {
+            Tokens tokens = userService.refreshTokens(refreshToken);
+            return ResponseEntity.ok(tokens);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().build();
         }
     }
 

@@ -1,11 +1,13 @@
 package com.example.backendgram.user.service;
 
 import com.example.backendgram.jwt.JwtUtil;
+import com.example.backendgram.jwt.Tokens;
+import com.example.backendgram.security.Impl.UserDetailsImpl;
 import com.example.backendgram.user.dto.SignupRequestDto;
 import com.example.backendgram.user.entity.User;
 import com.example.backendgram.user.entity.UserRoleEnum;
 import com.example.backendgram.user.repository.UserRepository;
-
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,8 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -62,14 +62,17 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public String login(String username, String password) {
+    public Tokens login(String username, String password) {
         try {
             User user = getUser(username, password);
 
             if (passwordEncoder.matches(password, user.getPassword())) {
                 // 비밀번호가 일치하면 JWT 토큰을 생성하여 반환
                 UserRoleEnum role = user.getRole();
-                return jwtUtil.createToken(username, role);
+                UserDetailsImpl userDetails = new UserDetailsImpl(user);
+                Tokens tokens = jwtUtil.generateTokens(userDetails);
+
+                return tokens;
             } else {
                 throw new RuntimeException("잘못된 인증 정보입니다.");
             }
@@ -77,6 +80,17 @@ public class UserService {
             throw new RuntimeException("사용자를 찾을 수 없습니다.");
         } catch (Exception e) {
             throw new RuntimeException("로그인에 실패했습니다.", e);
+        }
+    }
+
+    @Transactional
+    public Tokens refreshTokens(String refreshToken) {
+        try {
+            Tokens tokens = jwtUtil.refreshTokens(refreshToken);
+            return tokens;
+        } catch (RuntimeException e) {
+            log.error("Failed to refresh tokens.", e);
+            throw new RuntimeException("Failed to refresh tokens.", e);
         }
     }
 
@@ -93,7 +107,8 @@ public class UserService {
     public void deleteAccount(String username, String password) {
         try {
             User user = getUser(username, password);
-            if(user != null && user.getUsername().equals(username) && passwordEncoder.matches(password,user.getPassword())){
+            if (user != null && user.getUsername().equals(username) && passwordEncoder.matches(
+                password, user.getPassword())) {
                 userRepository.delete(user);
                 logout();
             }
@@ -105,9 +120,8 @@ public class UserService {
 
     private User getUser(String username, String password) {
         User user = userRepository.findByUsernameAndPassword(username, password).orElseThrow(
-                () -> new UsernameNotFoundException("사용자를 찾을 수 없습니다.")
+            () -> new UsernameNotFoundException("사용자를 찾을 수 없습니다.")
         );
         return user;
     }
-
 }
