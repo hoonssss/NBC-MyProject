@@ -44,6 +44,7 @@ public class CommentService {
         return new CommentResponseDto(comment);
     }
 
+    @Transactional
     public CommentResponseDto deleteService(Long commentId, CommentRequestDto commentRequestDto, User user) {
         Comment comment = getComment(commentId, commentRequestDto, user);
 
