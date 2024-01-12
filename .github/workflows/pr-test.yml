@@ -5,7 +5,7 @@ permissions:
   pull-requests: write
 
 on:
-  pull_request:
+  push:
     branches: [ BackendGram ] # dev 브랜치에 풀리퀘스트 보낼 떄 발생
 
 jobs:
